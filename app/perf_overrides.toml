@@ -1,0 +1,26 @@
+# Code generation performance overrides for Nintendo Switch ARM64 (Tegra X1).
+# Direct translation of guest PowerPC registers into host ARM64 registers.
+
+# Guest registers as C++ locals
+cr_as_local = true
+non_volatile_as_local = true
+xer_as_local = true
+ctr_as_local = true
+non_argument_as_local = true
+
+# Arguments in registers pass
+args_in_registers = false
+
+# Atomic synchronization & reservation optimization
+skip_msr = true
+reserved_as_local = true
+
+# Elimination of redundant LR saves
+elide_lr_stores = true
+
+# Memory access & arithmetic fast paths
+dform_disp_split = true
+fctiwz_inline = true
+dcbt_prefetch = true
+
+[functions]

@@ -1,0 +1,39 @@
+# Build outputs
+build/
+bin/
+out/
+generated/
+
+# Dependencies & Third-party
+sdk/
+mesa/
+XenosRecomp/
+
+# Game Assets (Never commit proprietary files!)
+game_root/
+assets/
+*.xex
+*.iso
+*.bik
+*.upk
+*.nfsp
+
+# IDE & OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Agent memory, logs & local session documents
+CLAUDE.md
+CURRENT_STATE.md
+PROJECT_MEMORY.md
+docs/
+*.html
+*.log
+
+# Toolchain binaries / prebuilt SDKs (large, reproducible)
+tools/dxc/
+tools/mesa-sdk/
+tools/__pycache__/
+temp_mesa_switch/

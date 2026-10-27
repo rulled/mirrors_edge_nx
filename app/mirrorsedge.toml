@@ -1,0 +1,141 @@
+# Mirror's Edge NX Runtime Configuration
+# Place in sdmc:/switch/mirrorsedge-nx/mirrorsedge.toml (created on first run if missing)
+# gpu_plugin = "xenos" (Disabled on Switch: native PM4 Vulkan renderer is used instead)
+masseffect_renderer_native = true
+# TEST 2026-10-21: mode 4 (shared depth/color ownership) - it is the only path that redirects the
+# mode5 pitch-640 D3D clears to the real targets.
+masseffect_native_edram_alias_mode = 4
+# Diagnostic knobs off: normal presentation, normal bin predication.
+masseffect_native_ignore_bin_predicate = false
+# DIAGNOSTIC: show the image the final composite pass samples (12658000) instead of the front buffer.
+masseffect_native_present_base_override = ""
+# DIAGNOSTIC: dump the real pixels of these resolved targets to the SD card, once, 12 s after start.
+masseffect_native_dump_resolved = ""
+masseffect_native_resolve_7e3_direct = true
+masseffect_native_resolve_7e3_frag = true
+# Count fragments written per pass (disabled for zero query/GPU synchronization overhead).
+masseffect_native_stats_pipeline = false
+# Xenia MSAA-tiling patch equivalent: force guest flag 0x830F4BB4 to 0.
+masseffect_force_tiling_off = true
+masseffect_native_allow_predicated_color_base = -1
+masseffect_diag_predicated_draws = 0
+masseffect_native_skip_dof = false
+masseffect_native_skip_motion_blur_pass = true
+masseffect_native_edram4_clear_color = false
+masseffect_native_conversion_frag = true
+masseffect_native_edram4_stencil_copy_rows = false
+masseffect_native_edram4_stencil_lazy = true
+masseffect_native_edram_reuse_descriptor_sets = true
+masseffect_native_restore_into_7e3 = true
+masseffect_native_resolve_bias_frag = true
+masseffect_native_edram4_rect_list_tiles = true
+masseffect_native_compare_fast = true
+masseffect_native_indices_cache = true
+masseffect_native_float24_ps_mode = 0
+masseffect_native_query_mode = 3
+masseffect_native_query_history_key = 1
+masseffect_native_query_hidden_after = 1
+masseffect_native_query_max_age = 8
+masseffect_native_query_skip_boxes = true
+masseffect_query_getdata_visible = false
+masseffect_native_deferred_recording = true
+masseffect_deferred_native_fast = true
+masseffect_deferred_native_compact = true
+masseffect_deferred_native_update = true
+masseffect_vblank_adaptive = true
+masseffect_native_waitregmem_spin_us = 500
+masseffect_wait_blocking_ring = false
+masseffect_swap_frames_in_flight = 2
+masseffect_native_send_after_shadows = false
+masseffect_exclusive_core = 33
+masseffect_present_immediate_threshold = 100
+masseffect_gpu_marks_categories = false
+masseffect_native_texture_coherency = 1
+masseffect_native_fingerprints_kb_frame = 4096
+masseffect_native_edram4_clear_alias_raw64 = true
+masseffect_native_fold_texture_signs = true
+# Pipeline pre-warming: OFF (concurrent vkCreateGraphicsPipelines/vkDestroyPipeline crashes Mesa NVK with VK_ERROR_DEVICE_LOST)
+masseffect_native_pipelines_prewarm = false
+masseffect_wait_occlusion_us = 2000
+masseffect_swap_wait_stats = true
+masseffect_native_fix_tonemap_7e3 = false
+masseffect_native_tonemap_7e3_scale = 1.0
+# DIAGNOSTIC 2026-10-21: log one whole frame of draws 20 s after start (menu up):
+masseffect_diag_draw_trace = 0
+
+# Native renderer: shader discovery directory (empty = off for zero SD I/O overhead during gameplay).
+# On-demand frame captures are triggered by the Capture button or L3+R3.
+masseffect_shader_discovery_dir = ""
+# Live logs over TCP to the development PC (Switch only). Set "<PC IPv4>:28771"
+# and run `python tools/log_server.py` before launching; every log line and
+# stdout/stderr (NVK messages) arrives there in real time. Empty = off.
+log_network = ""
+
+[graphics]
+# Renderer mode: "native" (custom PM4 Vulkan pipeline on NVK) or "emulated" (reference pipeline)
+renderer = "native"
+
+# Internal rendering resolution:
+# "auto" adjusts dynamically to keep target frame rate
+# "native" stays at 720p handheld / 1080p docked
+resolution_mode = "auto"
+
+# Target frame rate on Switch stock clocks (1020 MHz CPU / 460.8 MHz GPU)
+target_fps = 30
+
+# Dynamic render scale bounds (fraction of native resolution):
+# Handheld: 0.75 (540p) to 1.0 (720p)
+# Docked: 0.67 (720p) to 1.0 (1080p)
+dynamic_resolution = true
+scale_min = 0.75
+scale_max = 1.0
+
+# Post-processing sharpening when resolution is scaled below native:
+# "none", "cas" (AMD FidelityFX Contrast Adaptive Sharpening), "bilinear"
+post_filter = "cas"
+cas_sharpness = 0.6
+
+# Unreal Engine 3 Post-Processing Overrides
+bloom = true
+depth_of_field = true
+motion_blur = false        # Disabled by default on handheld for performance and clarity
+film_grain = false         # Disabled for cleaner presentation on 720p Switch LCD/OLED
+
+[audio]
+master_volume = 100
+music_volume = 100
+sfx_volume = 100
+voice_volume = 100
+# XMA2 packet decoding buffer size in milliseconds
+xma2_buffer_ms = 80
+
+[input]
+# Nintendo Switch Joy-Con / Pro Controller button mapping
+# In Mirror's Edge:
+# LB (Left Bumper) = Jump / Climb / Up
+# LT (Left Trigger) = Crouch / Slide / Down
+# RB (Right Bumper) = Turn 180 / Action
+# RT (Right Trigger) = Attack / Disarm
+# Y = Reaction Time (Slow Motion)
+# X = Objective Hint / Eye Focus
+# B = Cancel / Drop
+# A = Interact
+invert_pitch = false
+stick_deadzone_left = 0.15
+stick_deadzone_right = 0.15
+rumble_enabled = true
+gyro_enabled = false
+
+[system]
+# Switch Horizon OS Memory & Threading
+# Total allocated guest GDDR3 address space: 512 MB
+# Application Heap budget in Switch RAM: 2800 MB (leaving 400 MB headroom for OS/Vulkan)
+app_heap_mb = 2800
+
+# Exclusive Core 2 for UE3 RenderingThread; Cores 0 & 1 for GameThread & PhysX
+exclusive_rendering_core = true
+
+# NVK Driver parameters
+nvk_stage_cache = true
+nvk_faster_draws = true
+nvk_dyn_ubo_delta = true

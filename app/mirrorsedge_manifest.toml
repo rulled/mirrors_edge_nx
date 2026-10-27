@@ -1,0 +1,14 @@
+# ReXGlue recompilation manifest for Mirror's Edge (Xbox 360, default.xex) -> Nintendo Switch.
+# Title ID: 45410850 (Electronic Arts / DICE)
+
+[project]
+name = "mirrorsedge"
+sdk_version = "0.10.0"
+game_root = "../assets/game_root"
+
+[entrypoint]
+file_path = "../assets/game_root/default.xex"
+out_directory_path = "generated/default"
+
+# Overrides & performance flags
+includes = ["overrides.toml", "perf_overrides.toml"]
